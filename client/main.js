@@ -57,7 +57,7 @@ async function main() {
         // console.log(sortedRestaurants);
         //Slumpa endast 
         if (rand.distance < PREFERRED_DISTANCE) {
-          const ele = document.createElement("div")
+          const ele = document.createElement("article")
           ele.className = 'foodContainer animate__animated animate__jackInTheBox'
           //Ta fram slumpa restaurant på skärmen
           ele.innerHTML = `

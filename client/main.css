@@ -198,7 +198,7 @@ main .buttonContainer {
     margin-left: 30px;
 } 
 
-article {
+.cringea {
     display: flex;
     height: 100%;
     /* flex-direction: column-reverse; */
@@ -221,11 +221,19 @@ footer {
     /* margin-top: auto; */
     background-color: #fff;
     overflow-y: scroll;
+    background-color: #f0f0f0;
 }
 
-
-footer div {
+footer article {
     margin: 10px;
+}
+
+footer article .cardbody {
+    height: 188px;
+}
+
+footer article .cardbody h1 {
+    height: 96px;
 }
 
 .title {
