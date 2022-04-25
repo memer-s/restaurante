@@ -3,7 +3,13 @@
 //document är ett objekt som innehåller document object model.
 //Document object model används när man ändrar webbsidans utseende i.e lägga till noder eller text.
 let resturants;
+let sortedRestaurants
 let categories = []
+let last = undefined;
+
+let randomFunc;
+
+let Result = {};
 
 //Main-funktion
 async function main() {
@@ -19,25 +25,64 @@ async function main() {
 
       //Klick-event som randomiserar alla resturanger (Triggas när man trycker på en knappen "slumpa").
       //Denna metod måste ligga i for-loopen!!
-      document.getElementById("randomize").onclick = function () {
+      randomFunc = function () {
+
+        if(last !== undefined) {
+          last.className = 'foodContainer animate__animated animate__fadeIn'
+          document.getElementsByTagName("footer")[0].append(last);
+          document.getElementsByTagName("footer")[0].scrollBy(0, 10000)
+          document.getElementsByTagName("footer")[0].scrollBy(0, -7.5)
+        }
+
         //Ta fram en godtycklig restaurant.
-        const rand = resturants[Math.floor(Math.random() * resturants.length)]
-        
+
+        let sortedRestaurants = [];
+        let filterCat = document.getElementById("fillher").value;
+        // console.log(filterCat==='undefined');
+        if(filterCat === '') {
+          sortedRestaurants = resturants;
+        }
+        else {
+          resturants.forEach((el) => {
+            if(el.category == filterCat) {
+              // console.log(el.category===filterCat);
+              sortedRestaurants.push(el);
+            }
+          })
+        }
+
+        // console.log("test");
+
+        const rand = sortedRestaurants[Math.floor(Math.random() * sortedRestaurants.length)-1]
+        // console.log(sortedRestaurants);
         //Slumpa endast 
         if (rand.distance < PREFERRED_DISTANCE) {
           const ele = document.createElement("div")
-          ele.className = 'foodContainer'
+          ele.className = 'foodContainer animate__animated animate__jackInTheBox'
           //Ta fram slumpa restaurant på skärmen
           ele.innerHTML = `
-            <h1 class="food-name">${rand.name}</h1>
-            <span class="food-category">${rand.category}</span>
-            <span class="food-location">${rand.location}</span>
-           <p class="food-distance">${rand.distance >= 1000 ? (rand.distance / 1000).toFixed(2) + " km" : rand.distance.toFixed(2) + " m" }</p>
+            <div class="cardimage" style='background-image: url(images/${rand.category}.jpg)'></div>
+            <div class="cardbody">
+            
+              <div class="title">
+                <h1 class="food-name">${rand.name}</h1>
+              </div>
+              <div class="food-content">
+              <div>
+              <span class="food-category">${rand.category}</span>
+              <span class="food-location">${rand.location}</span>
+              </div>
+              <p class="food-distance">${rand.distance >= 1000 ? (rand.distance / 1000).toFixed(2) + " km" : rand.distance.toFixed(2) + " m" }</p>
+              </div>
+            </div>
           `
           //Läg till element med namn och kategorier under #content i HTML
+          document.querySelector("#content").innerHTML = ''
           document.querySelector("#content").append(ele)
+          last = ele;
         }
       }
+      document.getElementById("randomize").onclick = randomFunc
     }).catch(err => console.error(err))
   }
 }
@@ -110,7 +155,13 @@ function haversine(coords1, coords2) {
   return distance
 }
 
-const PREFERRED_DISTANCE = 2000 //meter
+let PREFERRED_DISTANCE = 2000 //meter
+
+document.getElementById("rang").addEventListener("input", () => {
+  PREFERRED_DISTANCE = parseInt(document.getElementById("rang").value)
+  console.log(PREFERRED_DISTANCE );
+  main();
+})
 
 function checkRange(restaurant) {
   //Maybe refactor this
